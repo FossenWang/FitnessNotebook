@@ -1,4 +1,4 @@
-package hello;
+package fitnessnotebook.hello;
 
 public class Greeting {
 

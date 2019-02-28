@@ -3,3 +3,9 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore IDE files
+fitness-notebook-server/bin/
+fitness-notebook-server/.settings/
+.classpath
+.project
