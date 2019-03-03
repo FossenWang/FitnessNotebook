@@ -28,5 +28,7 @@ public class LoginTest {
         this.mockMvc.perform(post(Urls.login))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.login").value(true));
+        this.mockMvc.perform(post(Urls.login))
+            .andExpect(status().isOk());
     }
 }
