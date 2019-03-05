@@ -1,4 +1,4 @@
-package fitnessnotebook.auth;
+package fitnessnotebook.auth.controllers;
 
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +29,6 @@ public class LoginController {
     // fetch('/api/auth/login', {
     //     method: 'POST', credentials: 'include'
     // }).then(response => response.json()).then(data => console.log(data))
-    // @PostMapping("/api/auth/login")
     @PostMapping(Urls.login)
     public HashMap<String, Object> login(HttpServletRequest request, HttpServletResponse response) {
 
@@ -43,7 +42,7 @@ public class LoginController {
         sessionStrategy.onAuthentication(authResult, request, response);
         SecurityContextHolder.getContext().setAuthentication(authResult);
 
-        UserDetails user = (UserDetails)authResult.getPrincipal();
+        UserDetails user = (UserDetails) authResult.getPrincipal();
         HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("login", true);
         result.put("user", user);
