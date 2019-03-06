@@ -24,9 +24,7 @@ public class LogoutController {
     public HashMap<String, Object> logout(HttpServletRequest request, HttpServletResponse response) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(request.getSession().getId());
         logoutHandler.logout(request, response, authentication);
-        System.out.println(request.getSession().getId());
 
         HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("logout", true);
