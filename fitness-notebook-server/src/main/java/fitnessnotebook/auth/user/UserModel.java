@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
         }
     )
 )
-class User {
+public class UserModel {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;

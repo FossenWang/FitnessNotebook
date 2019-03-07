@@ -5,8 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,16 +38,28 @@ public class AuthTest {
 
     private MockMvc mockMvc;
 
+    @Autowired
+    private UserDetailsManager userManager;
+
+    @Value("${spring.profiles.active:}")
+    private String activeProfiles;
+
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders
             .webAppContextSetup(context)
             .apply(springSecurity())
             .build();
+
+        UserDetails user = User.builder()
+            .username("fossen")
+            .password("password")
+            .roles("USER").build();
+        userManager.createUser(user);
     }
 
     @Test
-    public void testLogin() throws Exception {
+    public void testLoginAndLogout() throws Exception {
         MvcResult result = this.mockMvc
             .perform(post(Urls.login)
             .with(csrf().asHeader()))

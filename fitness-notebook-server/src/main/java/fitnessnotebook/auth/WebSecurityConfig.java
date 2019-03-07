@@ -1,18 +1,14 @@
 package fitnessnotebook.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
@@ -21,6 +17,8 @@ import org.springframework.security.web.authentication.logout.CompositeLogoutHan
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import fitnessnotebook.auth.user.JpaUserManager;
 
 @Configuration
 @EnableWebSecurity
@@ -37,21 +35,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // .csrf().disable();
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        UserDetails user =
-            User.builder().passwordEncoder(passwordEncoder::encode)
-                .username("fossen")
-                .password("password")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
+        return new JpaUserManager();
     }
 
     @Bean
