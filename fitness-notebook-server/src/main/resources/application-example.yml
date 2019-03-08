@@ -1,13 +1,18 @@
+# This is an example of the setting file,
+# the real setting file which contains privacy is ignored.
+
 spring:
     profiles:
-        active: dev,test
+        # active: prod
+        # active: dev
+        active: test
 ---
 spring:
     profiles: prod
     datasource:
-        url: jdbc:postgresql://47.100.166.183:5432/fitness
-        username: fossen
-        password: 4k5j6h
+        url: jdbc:postgresql://localhost:5432/fitness
+        username:
+        password:
         driver-class-name: org.postgresql.Driver
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -17,6 +22,16 @@ spring:
 ---
 spring:
     profiles: dev
+    datasource:
+        url: jdbc:postgresql://localhost:5432/fitness
+        username:
+        password:
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: none
+
 ---
 spring:
     profiles: test

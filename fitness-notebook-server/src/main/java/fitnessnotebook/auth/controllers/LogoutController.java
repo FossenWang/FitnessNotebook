@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import fitnessnotebook.Urls;
+import fitnessnotebook.auth.user.AuthUser;
 
 @RestController
 public class LogoutController {
@@ -28,7 +29,7 @@ public class LogoutController {
 
         HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("logout", true);
-        result.put("user", "anonymousUser");
+        result.put("user", AuthUser.createAnonymousUser());
         return result;
     }
 }

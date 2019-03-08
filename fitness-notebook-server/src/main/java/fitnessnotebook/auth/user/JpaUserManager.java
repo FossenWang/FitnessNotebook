@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
+import fitnessnotebook.auth.user.AuthUser;
+
 public class JpaUserManager implements UserDetailsManager {
 
     @Autowired
@@ -21,10 +23,7 @@ public class JpaUserManager implements UserDetailsManager {
         if (userModel == null) {
             throw new UsernameNotFoundException("User not found.");
         }
-        UserDetails user = User.builder()
-            .username(userModel.getUsername())
-            .password(userModel.getPassword())
-            .roles("USER").build();
+        UserDetails user = AuthUser.modelToAuthUser(userModel);
         return user;
     }
 

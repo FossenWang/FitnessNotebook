@@ -11,11 +11,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 import fitnessnotebook.Urls;
+import fitnessnotebook.auth.user.AuthUser;
 
 @RestController
 public class LoginController {
@@ -42,7 +42,7 @@ public class LoginController {
         sessionStrategy.onAuthentication(authResult, request, response);
         SecurityContextHolder.getContext().setAuthentication(authResult);
 
-        UserDetails user = (UserDetails) authResult.getPrincipal();
+        AuthUser user = (AuthUser) authResult.getPrincipal();
         HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("login", true);
         result.put("user", user);

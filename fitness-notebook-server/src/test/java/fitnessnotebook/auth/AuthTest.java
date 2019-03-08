@@ -4,6 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.WebApplicationContext;
@@ -11,14 +14,15 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -44,6 +48,12 @@ public class AuthTest {
     @Value("${spring.profiles.active:}")
     private String activeProfiles;
 
+    private String username = "fossen";
+    private String password = "password";
+    
+    @Autowired
+    private ObjectMapper jsonMapper;
+
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders
@@ -52,32 +62,70 @@ public class AuthTest {
             .build();
 
         UserDetails user = User.builder()
-            .username("fossen")
-            .password("password")
+            .username(username)
+            .password(password)
             .roles("USER").build();
         userManager.createUser(user);
     }
 
     @Test
     public void testLoginAndLogout() throws Exception {
-        MvcResult result = this.mockMvc
+        MvcResult result;
+
+        // Not login
+        result = this.mockMvc
+            .perform(get(Urls.currentUser))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").isEmpty())
+            .andExpect(jsonPath("$.username").value("anonymousUser"))
+            .andReturn();
+
+        // Login
+        result = this.mockMvc
             .perform(post(Urls.login)
             .with(csrf().asHeader()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.login").value(true))
-            .andExpect(jsonPath("$.user.username").value("fossen"))
-            .andExpect(jsonPath("$.user.password").isEmpty())
+            .andExpect(jsonPath("$.user.id").isNumber())
+            .andExpect(jsonPath("$.user.username").value(username))
             .andReturn();
 
+        // Save the session for the following use
         MockHttpSession session = (MockHttpSession) result.getRequest().getSession();
+        // Exact user id
+        JsonNode jNode = jsonMapper.readTree(result.getResponse().getContentAsString());
+        Integer userId = jNode.get("user").get("id").asInt();
 
+        // Get currentUser
+        result = this.mockMvc
+            .perform(get(Urls.currentUser)
+            .session(session))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(userId))
+            .andExpect(jsonPath("$.username").value(username))
+            .andReturn();
+
+        // Logout
         result = this.mockMvc
             .perform(post(Urls.logout)
             .with(csrf().asHeader())
             .session(session))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.logout").value(true))
-            .andExpect(jsonPath("$.user").value("anonymousUser"))
+            .andExpect(jsonPath("$.user.id").isEmpty())
+            .andExpect(jsonPath("$.user.username").value("anonymousUser"))
             .andReturn();
+        
+        // Session will be freshed after logout and login
+        session = (MockHttpSession) result.getRequest().getSession();
+
+        // Not Login, check logout indeed
+        result = this.mockMvc
+        .perform(get(Urls.currentUser)
+        .session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").isEmpty())
+        .andExpect(jsonPath("$.username").value("anonymousUser"))
+        .andReturn();
     }
 }

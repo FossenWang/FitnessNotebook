@@ -9,3 +9,6 @@ fitness-notebook-server/bin/
 fitness-notebook-server/.settings/
 .classpath
 .project
+
+# Ignore Spring settings
+application.yml
