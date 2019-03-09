@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fitnessnotebook.Urls;
+import fitnessnotebook.auth.user.AuthUser;
 
 @RestController
 public class GreetingController {
@@ -13,10 +14,10 @@ public class GreetingController {
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
-    // @RequestMapping("/greeting")
     @RequestMapping(Urls.greeting)
-    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
+    public Greeting greeting() {
+        AuthUser user = AuthUser.getCurrentUser();
         return new Greeting(counter.incrementAndGet(),
-                            String.format(template, name));
+                            String.format(template, user.getUsername()));
     }
 }

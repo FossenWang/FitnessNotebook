@@ -1,11 +1,16 @@
 package fitnessnotebook.auth.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -22,35 +27,57 @@ public class AuthUser extends User {
         super(username, password, true, true, true, true, authorities);
     }
 
-	public AuthUser(Integer id, String username, String password,
-        Collection<? extends GrantedAuthority> authorities) {
-        this(username, password, authorities);
+	public AuthUser(String username, String password, String... roles) {
+        super(username, password, makeRoles(roles));
+    }
+
+	public AuthUser(Integer id, String username, String password, String... roles) {
+        this(username, password, roles);
         this.id = id;
     }
 
-    public static AuthUser modelToAuthUser(UserModel userModel) {
-        UserDetails userDetails = AuthUser.builder()
-            .username(userModel.getUsername())
-            .password(userModel.getPassword())
-            .roles("USER").build();
-        AuthUser user = new AuthUser(
-            userModel.getId(),
-            userDetails.getUsername(),
-            userDetails.getPassword(),
-            userDetails.getAuthorities());
-        return user;
+    public static AuthUser entityToAuthUser(UserEntity userEntity) {
+        return new AuthUser(
+            userEntity.getId(),
+            userEntity.getUsername(),
+            userEntity.getPassword(),
+            "USER");
     }
 
     public static AuthUser createAnonymousUser() {
-        UserDetails userDetails = AuthUser.builder()
-            .username("anonymousUser")
-            .password("anonymous")
-            .roles("ANONYMOUS").build();
-        AuthUser user = new AuthUser(
-            userDetails.getUsername(),
-            userDetails.getPassword(),
-            userDetails.getAuthorities());
+        return new AuthUser(
+            "anonymousUser",
+            "anonymous",
+            "ANONYMOUS");
+    }
+
+    public static AuthUser getCurrentUser() {
+        Object principal = SecurityContextHolder
+            .getContext().getAuthentication().getPrincipal();
+        AuthUser user;
+        if (principal instanceof AuthUser) {
+            user = (AuthUser) principal;
+        } else if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            user = new AuthUser(
+                userDetails.getUsername(),
+                userDetails.getPassword(),
+                userDetails.getAuthorities());
+        } else {
+            user = createAnonymousUser();
+        }
         return user;
+    }
+
+    private static List<GrantedAuthority> makeRoles(String... roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>(
+                roles.length);
+        for (String role : roles) {
+            Assert.isTrue(!role.startsWith("ROLE_"), role
+                    + " cannot start with ROLE_ (it is automatically added)");
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+        }
+        return authorities;
     }
 
     public Integer getId() {
@@ -60,6 +87,4 @@ public class AuthUser extends User {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    
 }

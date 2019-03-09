@@ -1,5 +1,6 @@
 package fitnessnotebook.auth.user;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,19 +12,19 @@ import javax.persistence.UniqueConstraint;
 @Table(
     name = "auth_user",
     uniqueConstraints =  @UniqueConstraint(
-        name = "uk_user_username",
+        name = "uk_auth_user_username",
         columnNames = {
             "username",
         }
     )
 )
-public class UserModel {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
+	@Column(length=100)
     private String username;
-
 	private String password;
 
 	public Integer getId() {

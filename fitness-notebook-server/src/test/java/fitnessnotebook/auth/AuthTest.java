@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,6 +27,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import fitnessnotebook.Urls;
+import fitnessnotebook.auth.user.AuthUser;
+import fitnessnotebook.auth.user.JpaUserManager;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -43,14 +42,14 @@ public class AuthTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserDetailsManager userManager;
+    private JpaUserManager userManager;
 
     @Value("${spring.profiles.active:}")
     private String activeProfiles;
 
     private String username = "fossen";
     private String password = "password";
-    
+
     @Autowired
     private ObjectMapper jsonMapper;
 
@@ -61,11 +60,10 @@ public class AuthTest {
             .apply(springSecurity())
             .build();
 
-        UserDetails user = User.builder()
-            .username(username)
-            .password(password)
-            .roles("USER").build();
-        userManager.createUser(user);
+        if (activeProfiles.contains("test")) {
+            userManager.createUser(
+                new AuthUser(username, password, "USER"));
+        }
     }
 
     @Test
@@ -115,7 +113,7 @@ public class AuthTest {
             .andExpect(jsonPath("$.user.id").isEmpty())
             .andExpect(jsonPath("$.user.username").value("anonymousUser"))
             .andReturn();
-        
+
         // Session will be freshed after logout and login
         session = (MockHttpSession) result.getRequest().getSession();
 

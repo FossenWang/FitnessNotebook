@@ -27,12 +27,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/greeting", "/api/auth/login").permitAll()
-                // .antMatchers("/", "/home", "/api/auth/login").permitAll()
-                // .antMatchers("/greeting").authenticated()
+                .antMatchers("/greeting").authenticated()
+                .anyRequest().permitAll()
                 .and()
             .logout().disable();
-            // .csrf().disable();
     }
 
     @Bean
@@ -45,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
- 
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
