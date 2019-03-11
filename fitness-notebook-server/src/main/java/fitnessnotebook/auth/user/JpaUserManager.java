@@ -34,6 +34,7 @@ public class JpaUserManager implements UserDetailsService {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        userEntity.setRole(user.getRole());
         userRepository.save(userEntity);
     }
 
