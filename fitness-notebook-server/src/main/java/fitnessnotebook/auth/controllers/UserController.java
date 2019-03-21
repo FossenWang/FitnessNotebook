@@ -4,10 +4,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fitnessnotebook.Urls;
-import fitnessnotebook.auth.user.AuthUser;
+import fitnessnotebook.auth.dao.AuthUser;
 
 @RestController
-class UserController{
+public class UserController{
 
     @GetMapping(Urls.currentUser)
     public AuthUser currentUser() {

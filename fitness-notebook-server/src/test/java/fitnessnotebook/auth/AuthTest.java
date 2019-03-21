@@ -27,10 +27,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import fitnessnotebook.Urls;
-import fitnessnotebook.auth.user.AuthUser;
-import fitnessnotebook.auth.user.JpaUserManager;
-import fitnessnotebook.auth.user.UserRole;
-import fitnessnotebook.auth.user.UserRoleRepository;
+import fitnessnotebook.auth.dao.AuthUser;
+import fitnessnotebook.auth.dao.JpaUserService;
+import fitnessnotebook.auth.dao.UserRole;
+import fitnessnotebook.auth.dao.UserRoleRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,7 +44,7 @@ public class AuthTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private JpaUserManager userManager;
+    private JpaUserService userService;
 
     @Autowired
     private UserRoleRepository userRoleRepository;
@@ -68,7 +68,7 @@ public class AuthTest {
         if (activeProfiles.contains("test")) {
             UserRole role = new UserRole("USER");
             role = userRoleRepository.save(role);
-            userManager.createUser(
+            userService.createUser(
                 new AuthUser(username, password, role));
         }
     }

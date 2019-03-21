@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fitnessnotebook.Urls;
-import fitnessnotebook.auth.user.AuthUser;
+import fitnessnotebook.auth.dao.AuthUser;
 
 @RestController
 public class GreetingController {

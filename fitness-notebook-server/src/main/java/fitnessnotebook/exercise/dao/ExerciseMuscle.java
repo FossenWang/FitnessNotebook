@@ -1,4 +1,4 @@
-package fitnessnotebook.exercise.entities;
+package fitnessnotebook.exercise.dao;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,8 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "fitness_exercise_muscle")
 public class ExerciseMuscle implements Serializable {
     private static final long serialVersionUID = 1L;
 

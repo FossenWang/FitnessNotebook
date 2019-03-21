@@ -1,4 +1,4 @@
-package fitnessnotebook.auth.user;
+package fitnessnotebook.auth.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import fitnessnotebook.Urls;
-import fitnessnotebook.auth.user.AuthUser;
+import fitnessnotebook.auth.dao.AuthUser;
 
 @RestController
 public class LogoutController {

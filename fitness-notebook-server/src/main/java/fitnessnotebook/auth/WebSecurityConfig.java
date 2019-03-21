@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import fitnessnotebook.auth.user.JpaUserManager;
+import fitnessnotebook.auth.dao.JpaUserService;
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        return new JpaUserManager();
+        return new JpaUserService();
     }
 
     @Bean

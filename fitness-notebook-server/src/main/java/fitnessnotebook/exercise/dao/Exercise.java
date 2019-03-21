@@ -1,4 +1,4 @@
-package fitnessnotebook.exercise.entities;
+package fitnessnotebook.exercise.dao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,28 +8,31 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.type.TextType;
+import org.hibernate.annotations.Type;
 
 @Entity
+@Table(name = "fitness_exercise")
 public class Exercise {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    public Integer id;
+    private Integer id;
 
-    @ColumnDefault("0")
-    public Integer order;
+    @ColumnDefault("0")  // order
+    private Integer number;
 
-    @Column(length=100)
-	public String name;
+    @Column(length=100, nullable = false)
+	private String name;
 
-    public TextType description;
+    @Type(type = "text")
+    private String description;
 
 	@ManyToOne
 	@JoinColumn(name = "equipment_id")
@@ -50,12 +53,12 @@ public class Exercise {
         this.id = id;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public String getName() {
@@ -66,11 +69,11 @@ public class Exercise {
         this.name = name;
     }
 
-    public TextType getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(TextType description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

@@ -1,4 +1,4 @@
-package fitnessnotebook.auth.user;
+package fitnessnotebook.auth.dao;
 
 import org.springframework.data.repository.CrudRepository;
 

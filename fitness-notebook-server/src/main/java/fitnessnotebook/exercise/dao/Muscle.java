@@ -1,27 +1,30 @@
-package fitnessnotebook.exercise.entities;
+package fitnessnotebook.exercise.dao;
 
 import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.type.TextType;
+import org.hibernate.annotations.Type;
 
 @Entity
-public class Equipment {
+@Table(name = "fitness_muscle")
+public class Muscle {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    public Integer id;
+    private Integer id;
 
-    @ColumnDefault("0")
-    public Integer order;
+    @ColumnDefault("0")  // order
+    private Integer number;
 
-    @Column(length=100)
-	public String name;
+    @Column(length=100, nullable = false)
+	private String name;
 
-    public TextType description;
+    @Type(type = "text")
+    private String description;
 
     public Integer getId() {
         return id;
@@ -31,12 +34,12 @@ public class Equipment {
         this.id = id;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public String getName() {
@@ -47,11 +50,11 @@ public class Equipment {
         this.name = name;
     }
 
-    public TextType getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(TextType description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

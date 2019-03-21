@@ -1,4 +1,4 @@
-package fitnessnotebook.auth.user;
+package fitnessnotebook.auth.dao;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ public class UserEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "role_id",
-			foreignKey = @ForeignKey(name = "ROLE_ID_FK")
+		foreignKey = @ForeignKey(name = "ROLE_ID_FK")
 	)
 	private UserRole role;
 

@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 import fitnessnotebook.Urls;
-import fitnessnotebook.auth.user.AuthUser;
+import fitnessnotebook.auth.dao.AuthUser;
 
 @RestController
 public class LoginController {

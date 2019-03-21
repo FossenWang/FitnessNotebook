@@ -1,4 +1,4 @@
-package fitnessnotebook.auth.user;
+package fitnessnotebook.auth.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import fitnessnotebook.auth.user.AuthUser;
+import fitnessnotebook.auth.dao.AuthUser;
 
-public class JpaUserManager implements UserDetailsService {
+public class JpaUserService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
