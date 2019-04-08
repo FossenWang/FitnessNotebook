@@ -11,5 +11,7 @@ public class Urls {
 
     public static final String fitness = "/api/fitness";
     public static final String exercise = "/api/fitness/exercise";
+    public static final String equipmentList = "/api/fitness/equipment";
+    public static final String createEquipment = "/api/fitness/equipment";
     public static final String equipmentDetail = "/api/fitness/equipment/{id}";
 }

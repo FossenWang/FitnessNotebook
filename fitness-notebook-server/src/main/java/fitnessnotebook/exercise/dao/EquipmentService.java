@@ -5,7 +5,11 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import fitnessnotebook.tools.PagingResult;
 
 @Service
 public class EquipmentService {
@@ -33,5 +37,11 @@ public class EquipmentService {
         }
         equipment = equipmentRepository.save(equipment);
         return equipment;
+    }
+
+    public PagingResult<Equipment> getEquipmentList(Integer page, Integer size) {
+        Page<Equipment> ePage = equipmentRepository
+            .findAll(PageRequest.of(--page, size));
+        return new PagingResult<Equipment>(ePage);
     }
 }
